@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.conf import settings
 from rest_framework.response import Response
 
 from tacticalrmm.test import TacticalTestCase
@@ -71,6 +72,25 @@ class TestAgentInstalls(TacticalTestCase):
         data["agenttype"] = "workstation"
         r = self.client.post(url, data, format="json")
         self.assertEqual(r.status_code, 400)
+
+        # test linux no code sign with a custom unsigned agent mirror
+        with self.settings(
+            CUSTOM_AGENT_DOWNLOAD_URL="https://downloads.example.com/agents"
+        ):
+            r = self.client.post(url, data, format="json")
+        self.assertEqual(r.status_code, 200)
+        mock_linux_install.assert_called_with(
+            client=str(self.site2.client.pk),
+            site=str(self.site2.pk),
+            agent_type="workstation",
+            arch="amd64",
+            token="token",
+            api="https://api.example.com",
+            download_url=(
+                "https://downloads.example.com/agents/"
+                f"tacticalagent-v{settings.LATEST_AGENT_VER}-linux-amd64"
+            ),
+        )
 
         # test linux
         mock_token_valid.return_value = "token123", True
