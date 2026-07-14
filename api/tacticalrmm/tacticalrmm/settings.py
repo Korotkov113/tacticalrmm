@@ -35,7 +35,7 @@ APP_VER = "0.0.203"
 # https://github.com/amidaware/rmmagent
 LATEST_AGENT_VER = "2.11.0"
 
-MESH_VER = "1.2.0"
+MESH_VER = "1.2.1"
 
 NATS_SERVER_VER = "2.14.2"
 
@@ -283,6 +283,7 @@ CACHES = {
 }
 
 MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "tacticalrmm.middleware.LogIPMiddleware",
@@ -292,6 +293,7 @@ MIDDLEWARE = [
     "tacticalrmm.middleware.AuditMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "ee.sso.middleware.SSOIconMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 if SWAGGER_ENABLED:
