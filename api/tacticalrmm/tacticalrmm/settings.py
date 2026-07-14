@@ -90,6 +90,10 @@ WHEEL_VER = "0.45.1"
 
 AGENT_BASE_URL = "https://agents.tacticalrmm.com"
 
+# Optional unsigned Linux/macOS agent mirror. When unset, upstream code-signing
+# requirements and download behavior remain unchanged.
+CUSTOM_AGENT_DOWNLOAD_URL = os.getenv("CUSTOM_AGENT_DOWNLOAD_URL", "").rstrip("/")
+
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 ASGI_APPLICATION = "tacticalrmm.asgi.application"

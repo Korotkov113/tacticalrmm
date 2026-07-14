@@ -717,7 +717,18 @@ def install_agent(request):
 
     codesign_token, is_valid = token_is_valid()
 
-    if request.data["installMethod"] in {"bash", "mac"} and not is_valid:
+    custom_agent_download_url = settings.CUSTOM_AGENT_DOWNLOAD_URL
+    custom_unsigned_download = (
+        request.data["installMethod"] in {"bash", "mac"}
+        and not is_valid
+        and custom_agent_download_url
+    )
+
+    if (
+        request.data["installMethod"] in {"bash", "mac"}
+        and not is_valid
+        and not custom_unsigned_download
+    ):
         return notify_error(
             "Linux/Mac agents require code signing. Please see https://docs.tacticalrmm.com/code_signing/ for more info."
         )
@@ -726,7 +737,10 @@ def install_agent(request):
     if plat == AgentPlat.WINDOWS:
         inno += ".exe"
 
-    download_url = get_agent_url(goarch=goarch, plat=plat, token=codesign_token)
+    if custom_unsigned_download:
+        download_url = f"{custom_agent_download_url}/{inno}"
+    else:
+        download_url = get_agent_url(goarch=goarch, plat=plat, token=codesign_token)
 
     installer_user = User.objects.filter(is_installer_user=True).first()
 
