@@ -283,6 +283,7 @@ CACHES = {
 }
 
 MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "tacticalrmm.middleware.LogIPMiddleware",
@@ -292,6 +293,7 @@ MIDDLEWARE = [
     "tacticalrmm.middleware.AuditMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "ee.sso.middleware.SSOIconMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 if SWAGGER_ENABLED:
